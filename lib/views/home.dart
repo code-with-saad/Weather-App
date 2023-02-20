@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:weather_app/controller/home_controller.dart';
 import 'package:weather_app/utils/Text_constant.dart';
 import 'package:weather_app/utils/image_constant.dart';
+import 'package:weather_icons/weather_icons.dart';
 
 import '../utils/color_constant.dart';
 
@@ -53,10 +52,18 @@ class _HomeViewState extends State<HomeView> {
                       child: TextFormField(
                         controller: searchCity,
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            getweather();
+                            });
                         },
+                        style: TextStyle(color: Color(ColorConstant.white)),
                         cursorColor: Colors.white,
                         decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(width: 3, color: Colors.white),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                           hintText: "Search City",
                           hintStyle:
                               TextStyle(color: Color(ColorConstant.white)),
@@ -67,7 +74,7 @@ class _HomeViewState extends State<HomeView> {
                           enabledBorder: OutlineInputBorder(
                             borderSide:
                                 BorderSide(width: 3, color: Colors.white),
-                            borderRadius: BorderRadius.circular(50.0),
+                            borderRadius: BorderRadius.circular(20),
                           ),
                         ),
                       ),
@@ -82,34 +89,93 @@ class _HomeViewState extends State<HomeView> {
                 future: getweather(),
                 builder: (context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {
-                    if (searchCity.text.isEmpty) {
-                      return Text(
-                        "Please Enter a City name.",
-                        style: TextStyle(
-                          color: Color(ColorConstant.red),
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 30,
                         ),
-                      );
-                    } else {
-                      return ListView.builder(
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                height: 50,
+                        Text(
+                          "RealFeel: ${snapshot.data.main.feelsLike}°",
+                          style: TextStyle(
+                              color: Color(ColorConstant.white), fontSize: 15),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "City: ${snapshot.data.name}",
+                          style: TextStyle(
+                              color: Color(ColorConstant.white), fontSize: 25),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          "${snapshot.data.main.temp}°",
+                          style: TextStyle(
+                              color: Color(ColorConstant.white), fontSize: 50),
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ),
+                        Text(
+                          snapshot.data.weather[0].main,
+                          style: TextStyle(
+                              color: Color(ColorConstant.white), fontSize: 18),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                              // color: Color(ColorConstant.homegradient1),
+                              borderRadius: BorderRadius.circular(10)
                               ),
-                              Text(
-                                "RealFeel: ${snapshot.data[index].main.feels_like}°",
-                                style: TextStyle(
-                                    color: Color(ColorConstant.white)),
-                              )
-                            ],
-                          );
-                        },
-                      );
-                    }
+                              child: Row(
+                                children: [
+                                  Icon(Icons.thermostat,color: Color(ColorConstant.red),),
+                                  SizedBox(
+                                    width: 3,
+                                  ),
+                                  Text(
+                                    "${snapshot.data.main.tempMin}°",
+                                      style: TextStyle(
+                                      color: Color(ColorConstant.white), fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                              // color: Color(ColorConstant.homegradient1),
+                              borderRadius: BorderRadius.circular(10)
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.thermostat,color: Color(ColorConstant.blue),),
+                                  SizedBox(
+                                    width: 3,
+                                  ),
+                                  Text(
+                                    "${snapshot.data.main.tempMin}°",
+                                      style: TextStyle(
+                                      color: Color(ColorConstant.white), fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    );
                   } else {
                     return Center(child: CircularProgressIndicator());
                   }
