@@ -11,7 +11,6 @@ getweather() async {
   var url = Uri.parse(baseUrl);
   var res = await http.get(url);
   var jsonRes = jsonDecode(res.body);
-  print(res.body);
   var weatherdata = WeatherData.fromJson(jsonRes);
   return weatherdata;
 }
